@@ -6,17 +6,20 @@ I recreated all steps from instructional videos.
 
 ## Homework Challenges
 
-### ~~Run the dockerfile CMD as an external script~~
-
-### ~~Push and tag an image to DockerHub (they have a free tier)~~
-
 ### Use multi-stage building for a Dockerfile build
 
-I watched some tutorial about multi-stage building for a Dockerfile build.
+I watched and read some tutorial about multi-stage building for a Dockerfile build. I didn't have enought time to prepare proper Dockerfile for all app sub-services and implement more best practices.
 
 ### Implement a healthcheck in the V3 Docker compose file
 
-I implemented frontend healthcheck - needed to install curl - and recived ![healthy status](assets/w1-local-healthcheck-frontend.png)
+I implemented frontend and backend healthcheck - needed to install curl - and recived ![healthy status](assets/w1-local-healthcheck-frontend.png) - on localhost
+
+Then I tested app on gitpod after pushing changes to repo on github.
+![running containers with healthcheck](assets/w1-gitpod-healthcheck.png)
+
+And website:
+![runnung app in browser](assets/w1-gitpod-browser.png)
+
 
 ### Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
 
@@ -27,6 +30,7 @@ Then I checked repo with snyk.io. and check if I can modify frontend Dockerfile 
 ![snyk report](assets/w1-snyk-recomendations.png)
 
 I also modified the frontend - react app to run as *node* user (not as default root):
+[react Dockerfile](https://github.com/feleck/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/Dockerfile)
 
 ### Learn how to install Docker on your localmachine and get the same containers running outside of Gitpod / Codespaces
 
@@ -64,5 +68,3 @@ and ![frontend](assets/w1-local-react-cli.png).
 
 Later on I run app using *docker compose up* and docker-compose.yml file - ![docker compose - CLI](assets/w1-local-compose-cli.png)
 ![running app](assets/w1-local-compose-browser.png)
-
-### ~~Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes~~
