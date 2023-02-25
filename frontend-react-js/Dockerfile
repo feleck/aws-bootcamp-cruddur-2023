@@ -1,9 +1,10 @@
-FROM node:16.18
+FROM node:16.19.1-bullseye-slim
 
 ENV PORT=3000
 
-COPY . /frontend-react-js
+COPY --chown=node:node . /frontend-react-js
 WORKDIR /frontend-react-js
-RUN npm install
+RUN npm install && apt update && apt install -y curl
 EXPOSE ${PORT}
+USER node
 CMD ["npm", "start"]
