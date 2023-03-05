@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta, timezone
 
 class NotificationsActivities:
-  # def run():
-  def run(logger):
-    logger.info('NotificationsActivities')
+  def run():
+  # def run(logger):
+    # logger.info('NotificationsActivities')
 
     now = datetime.now(timezone.utc).astimezone()
     results = [{
