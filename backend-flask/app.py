@@ -153,7 +153,7 @@ def data_create_message():
 def data_home():
   data = HomeActivities.run()
   # data = HomeActivities.run(logger=LOGGER)
-  access_token = extract_access_token(request_headers)
+  access_token = extract_access_token(request.headers)
   try:
     claims = cognito_jwt_token.verify(access_token)
     # authenticated request
