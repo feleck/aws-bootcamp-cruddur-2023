@@ -44,10 +44,10 @@ class Db:
                 cur.execute(sql, params)
                 if is_returning_id:
                     returning_id = cur.fetchone()[0]
-                con.commit()
+                conn.commit()
                 if is_returning_id:
                     return returning_i
-        except:
+        except Exception as err:
             self.print_sql_error(err)
 
     # return an array of json objets
@@ -73,7 +73,7 @@ class Db:
                 # the first field being the data
                 json = cur.fetchone()
                 return json[0]
-
+        
     def print_sql_error(self, err):
         err_type, err_obj, traceback = sys.exc_info()
 
