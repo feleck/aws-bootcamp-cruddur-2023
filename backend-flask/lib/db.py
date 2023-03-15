@@ -31,12 +31,20 @@ class Db:
         print(f'{cyan}SQL STATEMENT - [{title}]----{no_color}')
         print(sql + "\n")
 
+    def print_params(self,params):
+        blue = '\033[94m'
+        no_color = '\033[0m'
+        print(f'{blue} SQL Params:{no_color}')
+        for key, value in params.items():
+            print(key, ":", value)
+
     # data insert with returning uuid
     def query_commit(self, sql, params={}):
         self.print_sql('commit with uuid', sql)
 
         pattern = r"\bRETURNING\b"
         is_returning_id = re.search(pattern, sql)
+        self.print_params(params)
 
         try:
             with self.pool.connection() as conn:
@@ -46,13 +54,14 @@ class Db:
                     returning_id = cur.fetchone()[0]
                 conn.commit()
                 if is_returning_id:
-                    return returning_i
+                    return returning_id
         except Exception as err:
-            self.print_sql_error(err)
+            self.print_sql_err(err)
 
     # return an array of json objets
     def query_array_json(self, sql, params={}):
         self.print_sql("array", sql)
+
         wrapped_sql = self.query_wrap_array(sql)
         with self.pool.connection() as conn:
             with conn.cursor() as cur:
@@ -65,6 +74,7 @@ class Db:
     # return data as json object
     def query_object_json(self, sql, params={}):
         self.print_sql("object", sql)
+        self.print_params(params)
         wrapped_sql = self.query_wrap_object(sql)
         with self.pool.connection() as conn:
             with conn.cursor() as cur:
@@ -74,18 +84,6 @@ class Db:
                 json = cur.fetchone()
                 return json[0]
         
-    def print_sql_error(self, err):
-        err_type, err_obj, traceback = sys.exc_info()
-
-        line_num = traceback.tb_lineno
-
-        print("\npsycopg ERROR:", err, "on line number:", line_num)
-        print("psycopg traceback:", traceback, "--type:", err_type)
-
-        # print("\nextentions.Diagnostics:", err.diag)
-
-        print("pgerror:", err.pgerror)
-        print("pgcode:", err.pgcode, "\n")
 
     def query_wrap_object(self, template):
         sql = f"""
@@ -103,7 +101,18 @@ class Db:
         """
         return sql
 
+    def print_sql_err(self, err):
+        err_type, err_obj, traceback = sys.exc_info()
+
+        line_num = traceback.tb_lineno
+
+        print("\npsycopg ERROR:", err, "on line number:", line_num)
+        print("psycopg traceback:", traceback, "--type:", err_type)
+
+        # print("\nextentions.Diagnostics:", err.diag)
+
+        print("pgerror:", err.pgerror)
+        
+        print("pgcode:", err.pgcode, "\n")
+  
 db = Db()
-
-
-
