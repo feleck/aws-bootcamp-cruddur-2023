@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+set -e
+
+if [ "$1" = "prod" ]; then
+    echo "using production env"
+    ENDPOINT_URL=""
+else
+    echo "using local env"
+    ENDPOINT_URL="--endpoint-url=http://localhost:8000"
+fi
+
+aws dynamodb list-tables $ENDPOINT_URL \
+  --query TableNames \
+  --output table

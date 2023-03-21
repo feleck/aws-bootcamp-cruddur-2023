@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+set -e
+
+# ./bin/ddb/drop cruddur-messages prod
+
+if [ -z "$1" ]; then
+    echo "no TABLE NAME argument supplied eg.: ./bin/ddb/drop cruddur-messages prod"
+    exit 1
+fi
+TABLE_NAME=$1
+
+if [ "$1" = "prod" ]; then
+    echo "using production env"
+    ENDPOINT_URL=""
+else
+    echo "using local env"
+    ENDPOINT_URL="--endpoint-url=http://localhost:8000"
+fi
+
+aws dynamodb delete-table $ENDPOINT_URL \
+  --table-name $TABLE_NAME
