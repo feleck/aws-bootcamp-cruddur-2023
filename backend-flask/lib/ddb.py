@@ -10,8 +10,8 @@ class Ddb:
       attrs = { 'endpoint_url': endpoint_url }
     else:
       attrs = {}
-  dynamodb = boto3.client('dynamodb', **attrs)
-  return dynamodb
+    dynamodb = boto3.client('dynamodb', **attrs)
+    return dynamodb
 
   def list_message_groups(client,my_user_uuid):
     year = str(datetime.now().year)
@@ -43,5 +43,3 @@ class Ddb:
         'created_at': last_sent_at
       })
     return results
-
-ddb = Ddb()
