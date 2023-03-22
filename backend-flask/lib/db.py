@@ -25,11 +25,11 @@ class Db:
             template_content = f.read()
         return template_content
 
-    def print_sql(self, title, sql):
+    def print_sql(self, title, sql, params={}):
         cyan = '\033[96m'
         no_color = '\033[0m'
         print(f'{cyan}SQL STATEMENT - [{title}]----{no_color}')
-        print(sql + "\n")
+        print(sql, params, "\n")
 
     def print_params(self,params):
         blue = '\033[94m'
@@ -40,7 +40,7 @@ class Db:
 
     # data insert with returning uuid
     def query_commit(self, sql, params={}):
-        self.print_sql('commit with uuid', sql)
+        self.print_sql('commit with uuid', sql, params)
 
         pattern = r"\bRETURNING\b"
         is_returning_id = re.search(pattern, sql)
@@ -60,7 +60,7 @@ class Db:
 
     # return an array of json objets
     def query_array_json(self, sql, params={}):
-        self.print_sql("array", sql)
+        self.print_sql("array", sql, params)
 
         wrapped_sql = self.query_wrap_array(sql)
         with self.pool.connection() as conn:
@@ -73,8 +73,8 @@ class Db:
 
     # return data as json object
     def query_object_json(self, sql, params={}):
-        self.print_sql("object", sql)
-        self.print_params(params)
+        self.print_sql("object", sql, params)
+        # self.print_params(params)
         wrapped_sql = self.query_wrap_object(sql)
         with self.pool.connection() as conn:
             with conn.cursor() as cur:
@@ -84,6 +84,13 @@ class Db:
                 json = cur.fetchone()
                 return json[0]
         
+    def query_value(self, sql, params={}):
+        self.print_sql('value', sql, params)
+        with self.pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(sql, params)
+                json = cur.fetchone()
+                return json[0]
 
     def query_wrap_object(self, template):
         sql = f"""
