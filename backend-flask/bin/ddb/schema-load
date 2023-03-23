@@ -6,39 +6,41 @@ import sys
 attrs = {
   'endpoint_url': 'http://localhost:8000'
 }
+
 if len(sys.argv) == 2:
   if "prod" in sys.argv[1]:
-    args = {}
+    attrs = {}
 
-ddb = boto3.client('dynamodb', **attrs)
+ddb = boto3.client('dynamodb',**attrs)
 
 table_name = 'cruddur-messages'
 
+
 response = ddb.create_table(
   TableName = table_name,
-  AttributeDefinitions = [
+  AttributeDefinitions=[
     {
-      'AttributeName': 'message_group_id',
+      'AttributeName': 'message_group_uuid',
       'AttributeType': 'S'
     },
     {
-      'AttributeName': 'pk', # pk for partition key
+      'AttributeName': 'pk',
       'AttributeType': 'S'
     },
-        {
-      'AttributeName': 'sk', # sk for secondary key
+    {
+      'AttributeName': 'sk',
       'AttributeType': 'S'
-    }
+    },
   ],
-  KeySchema = [
-    { 
-      'AttributeName': 'pk', # pk for partition key
-      'KeyType': 'HASH' #for partition key
+  KeySchema=[
+    {
+      'AttributeName': 'pk',
+      'KeyType': 'HASH'
     },
     {
-      'AttributeName': 'sk', # sk for secondary key
-      'KeyType': 'RANGE' # for sort key
-    }
+      'AttributeName': 'sk',
+      'KeyType': 'RANGE'
+    },
   ],
   GlobalSecondaryIndexes= [{
     'IndexName':'message-group-sk-index',
@@ -57,10 +59,10 @@ response = ddb.create_table(
       'WriteCapacityUnits': 5
     },
   }],
-  BillingMode = 'PROVISIONED',
-  ProvisionedThroughput = {
-    'ReadCapacityUnits': 5,
-    'WriteCapacityUnits': 5
+  BillingMode='PROVISIONED',
+  ProvisionedThroughput={
+      'ReadCapacityUnits': 5,
+      'WriteCapacityUnits': 5
   }
 )
 
