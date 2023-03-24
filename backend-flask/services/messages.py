@@ -16,7 +16,7 @@ class Messages:
     print(f"UUID: {my_user_uuid}")
 
     ddb = Ddb.client()
-    data = ddb.list_messages(ddb, message_group_uuid)
+    data = Ddb.list_messages(ddb, message_group_uuid)
     print("list messages")
     print(data)
 
