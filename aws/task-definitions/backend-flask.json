@@ -3,6 +3,11 @@
   "executionRoleArn": "arn:aws:iam::444282218245:role/CruddurServiceExecutionRole",
   "taskRoleArn": "arn:aws:iam::444282218245:role/CruddurTaskRole",
   "networkMode": "awsvpc",
+  "cpu": "256",
+  "memory": "512",
+  "requiresCompatibilities": [ 
+    "FARGATE" 
+  ],
   "containerDefinitions": [
     {
       "name": "backend-flask",
@@ -41,7 +46,6 @@
         {"name": "CONNECTION_URL"       , "valueFrom": "arn:aws:ssm:eu-west-1:444282218245:parameter/cruddur/backend-flask/CONNECTION_URL" },
         {"name": "ROLLBAR_ACCESS_TOKEN" , "valueFrom": "arn:aws:ssm:eu-west-1:444282218245:parameter/cruddur/backend-flask/ROLLBAR_ACCESS_TOKEN" },
         {"name": "OTEL_EXPORTER_OTLP_HEADERS" , "valueFrom": "arn:aws:ssm:eu-west-1:444282218245:parameter/cruddur/backend-flask/OTEL_EXPORTER_OTLP_HEADERS" }
-        
       ]
     }
   ]
