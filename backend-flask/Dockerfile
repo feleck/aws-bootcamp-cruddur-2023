@@ -1,13 +1,16 @@
-FROM python:3.10-slim-buster
+FROM 444282218245.dkr.ecr.eu-west-1.amazonaws.com/cruddur-python:3.10-slim-buster
 
 WORKDIR /backend-flask
 
 COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt && apt update && apt install -y curl
+RUN pip3 install -r requirements.txt 
+# && apt update && apt install -y curl
 
 COPY . .
 
+# FLASK_DEBUG=1 for dev, =0 for prod
 ENV FLASK_DEBUG=1
 
 EXPOSE ${PORT}
+# python3 -m flask run --host=0.0.0.0 --port=4567
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
