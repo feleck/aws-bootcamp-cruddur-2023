@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+set -e
+
+# ./bin/ecs/connect-to-service 3cce0b3614c249289eaa9459432b4eca
+
+if [ -z "$1" ]; then
+    echo "no TASK_ID argument supplied eg.:./bin/ecs/connect-to-service 3cce0b3614c249289eaa9459432b4eca"
+    exit 1
+fi
+
+TASK_ID=$1
+CONTAINER_NAME=backend-flask
+
+aws ecs execute-command \
+--command "/bin/bash" \
+--interactive \
+--task $TASK_ID \
+--cluster cruddur \
+--container $CONTAINER_NAME \
+--region $AWS_DEFAULT_REGION
