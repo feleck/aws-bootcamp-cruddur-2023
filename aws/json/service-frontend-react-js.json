@@ -8,18 +8,25 @@
       "awsvpcConfiguration": {
         "assignPublicIp": "ENABLED",
         "securityGroups": [
-          "sg-04ca5ebd69e0aec6f"
+          "sg-08de5cd9bd5bc1c95"
         ],
         "subnets": [
-          "subnet-0462b87709683ccaa",
-          "subnet-066a53dd88d557e05",
-          "subnet-021a6adafb79249e3"
+          "subnet-0420fd12a20cb3246",
+          "subnet-0dc6c36a87b613310",
+          "subnet-01c31f5a5b6ecb868"
         ]
       }
     },
     "propagateTags": "SERVICE",
     "serviceName": "frontend-react-js",
     "taskDefinition": "frontend-react-js",
+    "loadBalancers": [
+      {
+          "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-1:444282218245:targetgroup/cruddur-frontend-react-js/3f780e06cb137ccb",
+          "containerName": "frontend-react-js",
+          "containerPort": 3000
+      }
+    ],
     "serviceConnectConfiguration": {
       "enabled": true,
       "namespace": "cruddur",
