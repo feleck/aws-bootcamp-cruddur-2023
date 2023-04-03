@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+docker build \
+--build-arg REACT_APP_BACKEND_URL="https://api.awsbootcamp.online" \
+--build-arg REACT_APP_AWS_PROJECT_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_COGNITO_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_USER_POOLS_ID="eu-west-1_WysNGMyX0" \
+--build-arg REACT_APP_CLIENT_ID="5rs1f4tdgmh2vou8usr42th53j" \
+-t frontend-react-js \
+-f Dockerfile.prod \
+.
