@@ -73,8 +73,8 @@ class Db:
 
     # return data as json object
     def query_object_json(self, sql, params={}):
-        self.print_sql("object", sql, params)
-        # self.print_params(params)
+        self.print_sql("json object", sql, params)
+        self.print_params(params)
         wrapped_sql = self.query_wrap_object(sql)
         with self.pool.connection() as conn:
             with conn.cursor() as cur:
@@ -82,7 +82,10 @@ class Db:
                 # this will return a tuple
                 # the first field being the data
                 json = cur.fetchone()
-                return json[0]
+                if json == None:
+                    return "{}"
+                else:
+                    return json[0]
         
     def query_value(self, sql, params={}):
         self.print_sql('value', sql, params)
