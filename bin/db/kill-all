@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+CYAN='\033[1;36m'
+BRed="\033[1;31m" 
+NO_COLOR='\033[0m'
+LABEL="db-kill-all-connections"
+printf "${BRed}== ${LABEL} ==${NO_COLOR}\n"
+
+ABS_PATH=$(readlink -f "$0")
+DB_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $DB_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+BACKEND_FLASK_PATH="$PROJECT_PATH/backend-flask"
+
+KILL_ALL_PATH="$BACKEND_FLASK_PATH/db/kill-open-connections.sql"
+
+echo $KILL_ALL_PATH
+
+psql $CONNECTION_URL cruddur < $KILL_ALL_PATH
