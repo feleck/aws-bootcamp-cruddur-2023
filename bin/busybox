@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+docker run --rm \
+- 4567:4567 \
+-it busybox
