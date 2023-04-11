@@ -4,6 +4,7 @@ WORKDIR /backend-flask
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt 
+# && apt update && apt install -y curl
 
 COPY . .
 ENV PYTHONUNBUFFERD=1
