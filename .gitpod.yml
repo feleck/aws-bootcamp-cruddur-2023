@@ -18,10 +18,12 @@ tasks:
       source  "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"    
       cd backend-flask
       pip install -r requirements.txt
-  - name: Fargate
+  - name: fargate
     before: |
+      cd /workspace
       curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
       sudo dpkg -i session-manager-plugin.deb
+      cd $THEIA_WORKSPACE_ROOT
       cd backend-flask
   - name: postgres
     before: |
@@ -31,7 +33,7 @@ tasks:
       sudo apt install -y postgresql-client-13 libpq-dev
     command: |
       export GITPOD_IP=$(curl ifconfig.me)
-      source  "$THEIA_WORKSPACE_ROOT/backend-flask/bin/rds/update-sg-rule"
+      source  "$THEIA_WORKSPACE_ROOT/bin/rds/update-sg-rule"
 vscode:
   extensions:
     - 42Crunch.vscode-openapi
