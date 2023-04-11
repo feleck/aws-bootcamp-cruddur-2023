@@ -5,7 +5,7 @@ NO_COLOR='\033[0m'
 LABEL="rds-update-sg-rule"
 printf "${CYAN}== ${LABEL} ==${NO_COLOR}\n"
 
-printf("REMEMBER to check GITPOD_ID env var!")
+printf "REMEMBER to check GITPOD_ID env var!\n"
 
 aws ec2 modify-security-group-rules \
     --group-id $DB_SG_ID \

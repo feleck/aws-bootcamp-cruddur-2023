@@ -56,6 +56,8 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - 5432:5432
+    networks:
+      - cruddur-net
     volumes:
       - db:/var/lib/postgresql/data
   xray-daemon:
