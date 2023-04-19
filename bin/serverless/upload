@@ -6,6 +6,6 @@ DATA_FILE_PATH="$SERVERLESS_PATH/files"
 
 
 # for creating bucket:
-# aws s3 mb s3://awsbootcamp.online --region eu-west-1
+# aws s3 mb s3://assets.awsbootcamp.online --region eu-west-1
 
-aws s3 cp "file://$DATA_FILE_PATH/data.jpg" "s3://assets.$DOMAIN_NAME/avatar/original"
+aws s3 cp "$DATA_FILE_PATH/data.jpg" "s3://assets.$DOMAIN_NAME/avatars/original/"
