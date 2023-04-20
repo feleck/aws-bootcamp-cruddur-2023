@@ -1,9 +1,11 @@
 import * as cdk from 'aws-cdk-lib';
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as s3n from 'aws-cdk-lib/aws-s3-notifications';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as sns from 'aws-cdk-lib/aws-sns';
+import * as subscriptions from 'aws-cdk-lib/aws-sns-subscriptions'
 import { Construct } from 'constructs';
-import * as s3n from 'aws-cdk-lib/aws-s3-notifications'
-import * as iam from 'aws-cdk-lib/aws-iam'
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -20,15 +22,23 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     const webhookUrl: string = process.env.THUMBING_WEBHOOK_URL as string;
     const topicName: string = process.env.THUMBING_TOPIC_NAME as string;
 
-    // const bucket = this.createBucket(bucketName);
-    const bucket = this.importBucket(bucketName);
     // need to create S3 bucket by hand and use it (import here) "assets.awsbootcamp.online"
-    // create folders avatars and inside that: "oryginal" and "processed" in bucket (by hand)
-    const lambda = this.createLambda(functionPath, bucketName, folderInput, folderOutput);
-
-    this.createS3NotifyToLambda(folderInput, lambda, bucket);
+    // create folders avatars and inside that: "oryginal" and "processed" in bucket (by hand - using a script upload)
+    const bucket = this.importBucket(bucketName);
+    // const bucket = this.createBucket(bucketName);
+    const lambda = this.createLambda(functionPath,bucketName,folderInput,folderOutput);
+        
+    const snsTopic = this.createSnsTopic(topicName);
+    this.createS3NotifyToLambda(folderInput,lambda,bucket);
+    this.createS3NotifyToSns(folderOutput, snsTopic, bucket);
+    
+    this.createSnsSubscription(snsTopic,webhookUrl);
+    
     const s3ReadWritePolicy = this.createPolicyBucketAccess(bucket.bucketArn);
+    // const snsPublishPolicy = this.createPolicySnsPublish(snsTopic.topicArn);
+
     lambda.addToRolePolicy(s3ReadWritePolicy);
+    // lambda.addToRolePolicy(snsPublishPolicy);
   }
 
   createBucket(bucketName: string): s3.IBucket {
@@ -59,18 +69,26 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     });
     return lambdaFunction;
   }
-
+  
   createS3NotifyToLambda(prefix: string, lambda: lambda.IFunction, bucket: s3.IBucket): void {
     const destination = new s3n.LambdaDestination(lambda);
     bucket.addEventNotification(
       s3.EventType.OBJECT_CREATED_PUT,
       destination,
-      {
-        prefix: prefix //folder containig original images
-      }
-    )
+      //folder containig original images
+      { prefix: prefix } 
+    );
   }
 
+  createS3NotifyToSns(prefix: string, snsTopic: sns.ITopic, bucket: s3.IBucket): void {
+    const destination = new s3n.SnsDestination(snsTopic)
+    bucket.addEventNotification(
+      s3.EventType.OBJECT_CREATED_PUT,
+      destination,
+      { prefix: prefix}
+    );
+  }
+  
   createPolicyBucketAccess(bucketArn: string) {
     const s3ReadWritePolicy = new iam.PolicyStatement({
       actions: [
@@ -83,4 +101,33 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     });
     return s3ReadWritePolicy;
   }
+
+  // createPolicySnsPublish(topicArn: string) {
+  //   const snsPublishPolicy = new iam.PolicyStatement({
+  //     actions: [
+  //       'sns:Publish',
+  //     ],
+  //     resources: [
+  //       topicArn,
+  //     ]
+  //   });
+  //   return snsPublishPolicy;
+  // }
+
+  createSnsTopic(topicName: string): sns.ITopic {
+    const logicalName = "ThumbingTopic";
+    const snsTopic = new sns.Topic(this, logicalName, {
+      topicName: topicName
+    });
+    return snsTopic;
+  }
+
+  createSnsSubscription(snsTopic: sns.ITopic, webhookUrl: string): sns.Subscription {
+    const snsSubscription = snsTopic.addSubscription(
+      new subscriptions.UrlSubscription(webhookUrl)
+    )
+    return snsSubscription;
+  }
+
+  
 }
