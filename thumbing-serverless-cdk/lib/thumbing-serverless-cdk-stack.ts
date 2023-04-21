@@ -22,17 +22,24 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     const webhookUrl: string = process.env.THUMBING_WEBHOOK_URL as string;
     const topicName: string = process.env.THUMBING_TOPIC_NAME as string;
 
+    console.log('bucketName',bucketName)
+    console.log('folderInput',folderInput)
+    console.log('folderOutput',folderOutput)
+    console.log('webhookUrl',webhookUrl)
+    console.log('topicName',topicName)
+    console.log('functionPath',functionPath)
+
     // need to create S3 bucket by hand and use it (import here) "assets.awsbootcamp.online"
-    // create folders avatars and inside that: "oryginal" and "processed" in bucket (by hand - using a script upload)
+    // create folders avatars and inside that: "original" and "processed" in bucket (by hand - using a script upload)
     const bucket = this.importBucket(bucketName);
     // const bucket = this.createBucket(bucketName);
     const lambda = this.createLambda(functionPath,bucketName,folderInput,folderOutput);
         
-    const snsTopic = this.createSnsTopic(topicName);
     this.createS3NotifyToLambda(folderInput,lambda,bucket);
-    this.createS3NotifyToSns(folderOutput, snsTopic, bucket);
-    
+
+    const snsTopic = this.createSnsTopic(topicName);
     this.createSnsSubscription(snsTopic,webhookUrl);
+    this.createS3NotifyToSns(folderOutput,snsTopic,bucket);
     
     const s3ReadWritePolicy = this.createPolicyBucketAccess(bucket.bucketArn);
     // const snsPublishPolicy = this.createPolicySnsPublish(snsTopic.topicArn);
@@ -42,7 +49,7 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
   }
 
   createBucket(bucketName: string): s3.IBucket {
-    const bucket = new s3.Bucket(this, 'ThumbingBucket', {
+    const bucket = new s3.Bucket(this, 'AssetsBucket', {
       bucketName: bucketName,
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
@@ -50,7 +57,7 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
   }
 
   importBucket(bucketName: string): s3.IBucket {
-    const bucket = s3.Bucket.fromBucketName(this, "AssetsBucket", bucketName);
+    const bucket = s3.Bucket.fromBucketName(this, 'AssetsBucket', bucketName);
     return bucket;
   }
 
@@ -102,20 +109,20 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     return s3ReadWritePolicy;
   }
 
-  // createPolicySnsPublish(topicArn: string) {
-  //   const snsPublishPolicy = new iam.PolicyStatement({
-  //     actions: [
-  //       'sns:Publish',
-  //     ],
-  //     resources: [
-  //       topicArn,
-  //     ]
-  //   });
-  //   return snsPublishPolicy;
-  // }
+  createPolicySnsPublish(topicArn: string) {
+    const snsPublishPolicy = new iam.PolicyStatement({
+      actions: [
+        'sns:Publish',
+      ],
+      resources: [
+        topicArn,
+      ]
+    });
+    return snsPublishPolicy;
+  }
 
   createSnsTopic(topicName: string): sns.ITopic {
-    const logicalName = "ThumbingTopic";
+    const logicalName = 'ThumbingTopic';
     const snsTopic = new sns.Topic(this, logicalName, {
       topicName: topicName
     });
@@ -128,6 +135,5 @@ export class ThumbingServerlessCdkStack extends cdk.Stack {
     )
     return snsSubscription;
   }
-
   
 }
