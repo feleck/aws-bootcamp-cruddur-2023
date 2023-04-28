@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+set -e
+
+BPurple="\033[1;35m"
+NO_COLOR='\033[0m'
+LABEL="bootstrap"
+printf "${BPurple}=== ${LABEL} ===${NO_COLOR}\n"
+
+ABS_PATH=$(readlink -f "$0")
+BIN_PATH=$(dirname $ABS_PATH)
+
+echo $BIN_PATH
+echo "run bin/ecr/login first!"
+source "$BIN_PATH/db/setup"
+source "$BIN_PATH/ddb/schema-load"
+source "$BIN_PATH/ddb/seed"

@@ -1,6 +1,6 @@
 #!/usr/bin/bash
  # -e # stop on first error
-set -o errexit
+set -o errexit # same as -e option
 
 BPurple="\033[1;35m"
 NO_COLOR='\033[0m'
