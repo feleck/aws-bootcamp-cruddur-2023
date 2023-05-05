@@ -2,6 +2,8 @@ import './ProfileForm.css';
 import React from "react";
 import process from 'process';
 import {getAccessToken} from 'lib/CheckAuth';
+import { upload } from '@testing-library/user-event/dist/upload';
+import { PutObjectAclCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 export default function ProfileForm(props) {
   const [bio, setBio] = React.useState(0);
@@ -12,6 +14,30 @@ export default function ProfileForm(props) {
     setBio(props.profile.bio);
     setDisplayName(props.profile.display_name);
   }, [props.profile])
+
+  const s3upload = async (event)=> {
+    try {
+      const backend_url = 'https://tt7zmhw9ca.execute-api.eu-west-1.amazonaws.com/avatars/key_upload'
+      await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
+      const res = await fetch(backend_url, {
+        method: "POST",
+        headers: {
+          'Authorization': `Bearer ${access_token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      }})
+      let data = await res.json();
+      if (res.status === 200) {
+        console.log('predesigned-url', data)
+      } else {
+        console.log(res)
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
 
   const onsubmit = async (event) => {
     event.preventDefault();
@@ -65,13 +91,17 @@ export default function ProfileForm(props) {
           className='profile_form popup_form'
           onSubmit={onsubmit}
         >
-          <div class="popup_heading">
-            <div class="popup_title">Edit Profile</div>
+          <div className="popup_heading">
+            <div className="popup_title">Edit Profile</div>
             <div className='submit'>
               <button type='submit'>Save</button>
             </div>
           </div>
           <div className="popup_content">
+
+            <div className="upload" onClick={s3upload}>
+              Upload Avatar
+            </div>
             <div className="field display_name">
               <label>Display Name</label>
               <input
