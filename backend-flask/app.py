@@ -100,8 +100,9 @@ cors = CORS(
 #   return response
 
 rollbar_access_token = os.getenv('ROLLBAR_ACCESS_TOKEN')
-@app.before_first_request
-def init_rollbar():
+# @app.before_first_request
+# def init_rollbar():
+with app.app_context():
   rollbar.init(
     rollbar_access_token,
     'production',
