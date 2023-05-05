@@ -13,9 +13,5 @@ echo $BIN_PATH
 echo "run bin/ecr/login first!"
 
 source "$BIN_PATH/ecr/login"
-source "$BIN_PATH/backend/generate-env"
-source "$BIN_PATH/frontend/generate-env"
-
-# source "$BIN_PATH/db/setup"
-# source "$BIN_PATH/ddb/schema-load"
-# source "$BIN_PATH/ddb/seed"
+$BIN_PATH/backend/generate-env
+$BIN_PATH/frontend/generate-env
