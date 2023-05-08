@@ -1,5 +1,6 @@
 from lib.db import db
 from aws_xray_sdk.core import xray_recorder
+from datetime import datetime
 
 class UserActivities:
   def run(user_handle):
@@ -17,6 +18,7 @@ class UserActivities:
         model['data'] = results
 
       subsegment = xray_recorder.begin_subsegment('ua-mock-data')
+      now = datetime.now()
       dict = {
         "now": now.isoformat(),
         "result-size": len(model['data'])
