@@ -1,6 +1,6 @@
 .message_item {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   overflow: hidden;
   border-bottom: solid 1px rgb(31,36,49);
   padding: 16px;
@@ -54,8 +54,7 @@ background: rgba(255,255,255,0.08)
 .message_item  .message_identity .handle {
   color: rgb(255,255,255,0.5);
 }
-
-
+S
 .message_item .created_at {
   color: rgb(72,77,95);
   font-size: 14px;

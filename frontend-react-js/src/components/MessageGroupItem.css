@@ -1,6 +1,6 @@
 .message_group_item {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   overflow: hidden;
   padding: 16px;
   cursor: pointer;
@@ -51,7 +51,6 @@ background: rgba(255,255,255,0.08)
 .message_group_item  .message_group_identity .handle {
   color: rgb(255,255,255,0.5);
 }
-
 
 .message_group_item .created_at {
   color: rgb(72,77,95);
