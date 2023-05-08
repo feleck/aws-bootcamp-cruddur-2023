@@ -6,6 +6,7 @@ import { upload } from '@testing-library/user-event/dist/upload';
 import { PutObjectAclCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 export default function ProfileForm(props) {
+  const [presignedurl, setPresignedurl] = React.useState(0);
   const [bio, setBio] = React.useState(0);
   const [displayName, setDisplayName] = React.useState(0);
 
@@ -15,7 +16,7 @@ export default function ProfileForm(props) {
     setDisplayName(props.profile.display_name);
   }, [props.profile])
 
-  const s3upload = async (event)=> {
+  const s3uploadkey = async (event)=> {
     try {
       const backend_url = 'https://tt7zmhw9ca.execute-api.eu-west-1.amazonaws.com/avatars/key_upload'
       await getAccessToken()
@@ -23,13 +24,15 @@ export default function ProfileForm(props) {
       const res = await fetch(backend_url, {
         method: "POST",
         headers: {
+          'Origin': 'https://3000-feleck-awsbootcampcrudd-j5mzmw6f17m.ws-eu96b.gitpod.io',
           'Authorization': `Bearer ${access_token}`,
           'Accept': 'application/json',
           'Content-Type': 'application/json'
       }})
       let data = await res.json();
       if (res.status === 200) {
-        console.log('predesigned-url', data)
+        console.log('predesigned url', data)
+        return data.URL
       } else {
         console.log(res)
       }
@@ -38,6 +41,34 @@ export default function ProfileForm(props) {
     }
   }
   
+  const s3upload = async (event)=> {
+    const file = event.target.files[0];
+    const filename = file.name;
+    const size = file.name;
+    const type = file.type;
+    const preview_image = URL.createObjectURL(file);
+    console.log('file', file, filename, size, type);
+    const presignedurl = await s3uploadkey()
+    console.log(presignedurl)
+    try {
+      await getAccessToken()
+      const res = await fetch(presignedurl, {
+        method: "PUT",
+        body: file,
+        headers: {
+          'Content-Type': type
+      }})
+      let data = await res.json();
+      if (res.status === 200) {
+        setPresignedurl(data.URL)
+        console.log('predesigned-url', data)
+      } else {
+        console.log(res)
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   const onsubmit = async (event) => {
     event.preventDefault();
@@ -99,8 +130,12 @@ export default function ProfileForm(props) {
           </div>
           <div className="popup_content">
 
-            <div className="upload" onClick={s3upload}>
+            <div className="upload" onClick={s3uploadkey}>
               Upload Avatar
+            </div>
+            <input type="file" name="avatarupload" onChange={s3upload} accept='image/png, image/jpeg'/>
+            <div className="upload" onClick={s3upload}>
+              Upload Avatar For Real
             </div>
             <div className="field display_name">
               <label>Display Name</label>
