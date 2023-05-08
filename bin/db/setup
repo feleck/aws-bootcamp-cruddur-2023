@@ -16,5 +16,5 @@ source "$BIN_PATH/db/drop"
 source "$BIN_PATH/db/create"
 source "$BIN_PATH/db/schema-load"
 source "$BIN_PATH/db/seed"
-
-python $BIN_PATH/db/update-cognito-user-ids
+python "$BIN_PATH/db/update-cognito-user-ids"
+source "$BIN_PATH/db/migrate"
