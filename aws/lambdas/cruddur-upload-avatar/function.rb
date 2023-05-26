@@ -18,11 +18,11 @@ def handler(event:, context:)
   else
     token = event['headers']['authorization'].split(' ')[1]
     puts ({step: 'presignedurl', access_token: token}.to_json)
-    body_hash = JSON.parse(e["body"])
+    body_hash = JSON.parse(event["body"])
     extension = body_hash["extension"]
     decoded_token = JWT.decode token, nil, false
     puts 'decoded token'
-    cognito_user_uuid = decoded_token['sub']
+    cognito_user_uuid = decoded_token[0]['sub']
 
     s3 = Aws::S3::Resource.new
     bucket_name = ENV['UPLOADS_BUCKET_NAME']

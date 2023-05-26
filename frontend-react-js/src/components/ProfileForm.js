@@ -16,7 +16,7 @@ export default function ProfileForm(props) {
 
   const s3uploadkey = async (extension)=> {
     try {
-      const gateway_url = `${process.env.REACT_APP_API_GATEWAY_ENDPOINT_URL}` //avatars/key_upload`
+      const gateway_url = `${process.env.REACT_APP_API_GATEWAY_ENDPOINT_URL}/avatars/key_upload`
       await getAccessToken()
       const access_token = localStorage.getItem("access_token")
       const json = {
@@ -35,7 +35,7 @@ export default function ProfileForm(props) {
       console.log('RES', res)
       let data = await res.json();
       if (res.status === 200) {
-        console.log('predesigned url', data)
+        console.log('presigned url', data)
         return data.URL
       } else {
         console.log(res)
