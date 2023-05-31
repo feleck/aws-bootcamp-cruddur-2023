@@ -4,13 +4,11 @@ import process from 'process';
 import {getAccessToken} from 'lib/CheckAuth';
 
 export default function ProfileForm(props) {
-  // const [presignedurl, setPresignedurl] = React.useState('');
   const [bio, setBio] = React.useState('');
   const [displayName, setDisplayName] = React.useState('');
 
   React.useEffect(()=>{
     setBio(props.profile.bio || '');
-    // console.log('useEffects',props)
     setDisplayName(props.profile.display_name);
   }, [props.profile])
 
@@ -34,21 +32,23 @@ export default function ProfileForm(props) {
       })
       console.log('RES', res)
       let data = await res.json();
+      console.log("DATA", data)
       if (res.status === 200) {
         console.log('presigned url', data)
-        return data.URL
+        return data.url
       } else {
-        console.log(res)
+        console.log('not 200', res)
       }
     } catch (err) {
-      console.log(err);
+      console.log('ERRRRRRRRR', err);
     }
   }
   
   const s3upload = async (event)=> {
+    console.log('event', event)
     const file = event.target.files[0];
     const filename = file.name;
-    const size = file.name;
+    const size = file.size;
     const type = file.type;
     const preview_image_url = URL.createObjectURL(file);
     console.log('file', file, filename, size, type);
