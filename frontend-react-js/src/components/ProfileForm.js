@@ -13,6 +13,7 @@ export default function ProfileForm(props) {
   }, [props.profile])
 
   const s3uploadkey = async (extension)=> {
+    console.log('ext',extension)
     try {
       const gateway_url = `${process.env.REACT_APP_API_GATEWAY_ENDPOINT_URL}/avatars/key_upload`
       await getAccessToken()
@@ -30,45 +31,37 @@ export default function ProfileForm(props) {
           'Content-Type': 'application/json'
         }
       })
-      console.log('RES', res)
       let data = await res.json();
-      console.log("DATA", data)
       if (res.status === 200) {
-        console.log('presigned url', data)
         return data.url
       } else {
-        console.log('not 200', res)
+        console.log(res)
       }
     } catch (err) {
-      console.log('ERRRRRRRRR', err);
+      console.log(err);
     }
   }
-  
   const s3upload = async (event)=> {
-    console.log('event', event)
-    const file = event.target.files[0];
-    const filename = file.name;
-    const size = file.size;
-    const type = file.type;
-    const preview_image_url = URL.createObjectURL(file);
-    console.log('file', file, filename, size, type);
+    console.log('event',event)
+    const file = event.target.files[0]
+    const filename = file.name
+    const size = file.size
+    const type = file.type
+    const preview_image_url = URL.createObjectURL(file)
+    console.log(filename,size,type)
     const fileparts = filename.split('.')
     const extension = fileparts[fileparts.length-1]
     const presignedurl = await s3uploadkey(extension)
-    console.log('--presignedurl', presignedurl)
     try {
-      // await getAccessToken()
+      console.log('s3upload')
       const res = await fetch(presignedurl, {
         method: "PUT",
         body: file,
         headers: {
           'Content-Type': type
-        }
-      })
-      // let data = await res.json();
+      }})
       if (res.status === 200) {
-        // setPresignedurl(data.URL)
-        console.log('presigned-url', data)
+        
       } else {
         console.log(res)
       }
@@ -136,11 +129,8 @@ export default function ProfileForm(props) {
             </div>
           </div>
           <div className="popup_content">
-
-            <div className="upload" onClick={s3uploadkey}>
-              Upload Avatar
-            </div>
-            <input type="file" name="avatarupload" onChange={s3upload} />
+            
+          <input type="file" name="avatarupload" onChange={s3upload} />
 
             <div className="field display_name">
               <label>Display Name</label>
