@@ -26,13 +26,14 @@ export default function ProfileForm(props) {
         body: JSON.stringify(json),
         headers: {
           'Origin': process.env.REACT_APP_FRONTEND_URL,
-          'Authorization': `Bearer ${access_token}`,
+          'Authorization': `${access_token}`,
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       })
       let data = await res.json();
       if (res.status === 200) {
+        console.log("PRESIGNED!", data.url)
         return data.url
       } else {
         console.log(res)
@@ -41,14 +42,15 @@ export default function ProfileForm(props) {
       console.log(err);
     }
   }
+
   const s3upload = async (event)=> {
     console.log('event',event)
     const file = event.target.files[0]
     const filename = file.name
     const size = file.size
     const type = file.type
-    const preview_image_url = URL.createObjectURL(file)
-    console.log(filename,size,type)
+    // const preview_image_url = URL.createObjectURL(file)
+    // console.log(filename,size,type)
     const fileparts = filename.split('.')
     const extension = fileparts[fileparts.length-1]
     const presignedurl = await s3uploadkey(extension)

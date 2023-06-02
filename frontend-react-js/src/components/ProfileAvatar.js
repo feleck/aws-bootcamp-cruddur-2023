@@ -1,9 +1,8 @@
 import './ProfileAvatar.css';
 
 export default function ProfileAvatar(props) {
-  // const backgroundImage = `url("https://assets.awsbootcamp.online/avatars/${props.id}.jpg")`;
-  const backgroundImage = `url("https://assets.awsbootcamp.online/avatars/data.jpg")`;
-  
+  const backgroundImage = `url("https://assets.awsbootcamp.online/avatars/${props.id}.jpg")`;
+
   const styles = {
     backgroundImage: backgroundImage,
     backgroundSize: 'cover',
