@@ -1,5 +1,7 @@
 # FREE AWS Cloud Project Bootcamp
 
+![https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiajZpTnNpQ2FnaU1yNUNwU1NJRHY5RC95Qm1xUU10V01BaVZ4bERFWmloOWtacnBYVmZOVnRvbG80SU44eEpWcE5iMFpnTEh5Yko2ODhzek1rYm9JcXRVPSIsIml2UGFyYW1ldGVyU3BlYyI6IjVsajVPSmdMT1RkZVhka0wiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=main]
+
 - Application: Cruddur
 - Cohort: 2023-A1
 
