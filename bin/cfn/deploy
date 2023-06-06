@@ -11,8 +11,10 @@ PROJECT_PATH=$(dirname $BIN_PATH)
 CFN_PATH="$PROJECT_PATH/aws/cfn"
 echo $CFN_PATH
 
+cfn-lint "$CFN_PATH/template.yaml"
+
 aws cloudformation deploy \
-    --stack-name "my-clouster" \
+    --stack-name "my-cluster" \
     --template-file  "$CFN_PATH/template.yaml" \
     --no-execute-changeset \
     --capabilities CAPABILITY_NAMED_IAM
