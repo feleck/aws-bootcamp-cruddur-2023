@@ -1,0 +1,23 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "codebuild",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::444282218245:role/service-role/codebuild-cruddur-service-role"
+            },
+            "Action": [
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:CompleteLayerUpload",
+                "ecr:GetAuthorizationToken",
+                "ecr:InitiateLayerUpload",
+                "ecr:PutImage",
+                "ecr:UploadLayerPart",
+                "ecr:BatchGetImage",
+                "ecr:GetDownloadUrlForLayer"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
