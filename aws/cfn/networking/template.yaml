@@ -20,7 +20,7 @@ Parameters:
       10.0.20.0/22
   Az1:
     Type: AWS::EC2::AvailabilityZone::Name
-    Default: eu-west-1
+    Default: eu-west-1a
   Az2:
     Type: AWS::EC2::AvailabilityZone::Name
     Default: eu-west-1b
