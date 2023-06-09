@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -e # stop the execution if it fails
+
+ABS_PATH=$(readlink -f "$0")
+BACKEND_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $BACKEND_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+CFN_PATH="$PROJECT_PATH/aws/cfn/cluster"
+echo $CFN_PATH
+
+cfn-lint "$CFN_PATH/template.yaml"
+
+# aws cloudformation deploy \
+#     --stack-name "Cruddur" \
+#     --s3-bucket $CFN_BUCKET \
+#     --template-file  "$CFN_PATH/template.yaml" \
+#     --no-execute-changeset \
+#     --tags group=cruddur_cluster \
+#     --capabilities CAPABILITY_NAMED_IAM

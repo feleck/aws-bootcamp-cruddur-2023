@@ -16,4 +16,5 @@ aws cloudformation deploy \
     --s3-bucket $CFN_BUCKET \
     --template-file  "$CFN_PATH/template.yaml" \
     --no-execute-changeset \
+    --tags group=cruddur_cluster \
     --capabilities CAPABILITY_NAMED_IAM

@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: |
+  Setup Cluster
+
+# Parameters:
+
+Resources:
+  FargateCluster:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub "${AWS::StackName}FargateCluster"
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Configuration:
+        ExecuteCommandConfiguration:
+          # KmsKeyId: !Ref KmsKeyId
+          Logging: DEFAULT
+      CapacityProviders: 
+        - FARGATE
+      ServiceConnectDefaults:
+        Namespace: cruddur
+  LoadBalancer:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      IpAddressType: ipv4
+      LoadBalancerAttributes:
+      # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes.html
+        # default value true:
+        - Name: routing.http2.enabled
+          Value: true
+        # default value: false:
+        - Name: routing.http.preserve_host_header.enabled
+          Value: false
+
+
+# Outputs:
