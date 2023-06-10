@@ -22,19 +22,42 @@ Resources:
         - FARGATE
       ServiceConnectDefaults:
         Namespace: cruddur
+
   LoadBalancer:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
+      Name: !Sub "${AWS::StackName}ALB"
+      Type: application
       IpAddressType: ipv4
+      Scheme: internet-facing
+      SecurityGroups:
+        - securityGroupIds
+      Subnets:
+        - subnetId1
+        - subnetId2
+
       LoadBalancerAttributes:
       # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes.html
-        # default value true:
-        - Name: routing.http2.enabled
+        - Key: routing.http2.enabled
+          # default value true:
           Value: true
-        # default value: false:
-        - Name: routing.http.preserve_host_header.enabled
+        - Key: routing.http.preserve_host_header.enabled
+          # default value: false:
           Value: false
+        - Key: deletion_protection.enabled
+          # default value: false:
+          Value: true
+        - Key: load_balancing.cross_zone.enabled
+          # default value for ALB: true:
+          Value: true
+        - Key: access_logs.s3.enabled
+          Value: false
+        # In case we want to turn on logs (in S3 bucket)
+        # - Key: access_logs.s3.bucket
+        #   Value: bucket-name
+        # - Key: access_logs.s3.prefix
+        #   Value: ""
 
 
 # Outputs:
