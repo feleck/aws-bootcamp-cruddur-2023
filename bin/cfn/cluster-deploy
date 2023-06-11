@@ -12,7 +12,7 @@ echo $CFN_PATH
 cfn-lint "$CFN_PATH/template.yaml"
 
 # aws cloudformation deploy \
-#     --stack-name "Cruddur" \
+#     --stack-name "CrdCluster" \
 #     --s3-bucket $CFN_BUCKET \
 #     --template-file  "$CFN_PATH/template.yaml" \
 #     --no-execute-changeset \

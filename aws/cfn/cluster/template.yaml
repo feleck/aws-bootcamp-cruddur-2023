@@ -1,9 +1,77 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Description: |
-  Setup Cluster
+  The networking and cluster config uration to support fargate containers
+  - ECS Fargate Cluster
+  - Application Load Balancer (ALB)
+    - ipv4 only
+    - internet facing
+  - ALB Security Group
+  - HTTPS Listener
+    - send naked domain to frontend Target Group
+    - send .api subdomain to backend Target Group
+  - HTTP Listener
+    - redirects to HTTPS listener
+  - Backend Target Group
+  - Frontend Target Group
 
-# Parameters:
+Parameters:
+  NetworkingStack:
+    Type: String
+    Description: Base layer of networking components eg. VPC, Subnets
+    Default: CrdNet
+  CertificateArn:
+    Type: String
+  # FRONTEND
+  FrontendPort:
+    Type: Number
+    Default: 3000
+  FrontendHealthCheckIntervalSeconds:
+    Type: Number
+    Default: 15
+  FrontendHealthCheckPath:
+    Type: String
+    Default: "/"
+  FrontendHealthCheckPort:
+    Type: String
+    Default: 80
+  FrontendHealthCheckProtocol:
+    Type: String
+    Default: HTTP
+  FrontendHealthCheckTimeoutSeconds:
+    Type: Number
+    Default: 5
+  FrontendHealthyThresholdCount:
+    Type: Number
+    Default: 2
+  FrontendUnhealthyThresholdCount:
+    Type: Number
+    Default: 2
+  # BACKEND
+  BackendPort:
+    Type: Number
+    Default: 4567
+  BackendHealthCheckIntervalSeconds:
+    Type: Number
+    Default: 15
+  BackendHealthCheckPath:
+    Type: String
+    Default: "/api/health-check"
+  BackendHealthCheckPort:
+    Type: String
+    Default: 80
+  BackendHealthCheckProtocol:
+    Type: String
+    Default: HTTP
+  BackendHealthCheckTimeoutSeconds:
+    Type: Number
+    Default: 5
+  BackendHealthyThresholdCount:
+    Type: Number
+    Default: 2
+  BackendUnhealthyThresholdCount:
+    Type: Number
+    Default: 2
 
 Resources:
   FargateCluster:
@@ -32,10 +100,12 @@ Resources:
       IpAddressType: ipv4
       Scheme: internet-facing
       SecurityGroups:
-        - securityGroupIds
+        - !Ref ALBSG
       Subnets:
-        - subnetId1
-        - subnetId2
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              !Sub: "${NetworkingStack}SubnetIds"
 
       LoadBalancerAttributes:
       # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes.html
@@ -58,6 +128,119 @@ Resources:
         #   Value: bucket-name
         # - Key: access_logs.s3.prefix
         #   Value: ""
+
+  HTTPSListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref CertificateArn
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref FrontendTG
+      LoadBalancerArn: !Ref LoadBalancer
+
+  HTTPListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: redirect
+          RedirectConfig: 
+            Protocol: HTTPS
+            Port: 443
+            Host: "#{Host}"
+            Path: "/#{path}"
+            Query: "#{query}"
+            StatusCode: "HTTP_301"
+      LoadBalancerArn: !Ref LoadBalancer
+
+  ApiALBListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              - api.awsbootcamp.online
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref BackendTG
+      ListenerArn: !Ref HTTPSListener
+      Priority: 1
+
+  ALBSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+      GroupDescription: Public Facing SG For out Cruddur ALB
+      GroupName: !Sub "${AWS::StackName}AlbSG"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+          Description: Internet HTTPS
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: Internet HTTP
+
+  BackendTG:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:      
+      Name: !Sub "${AWS::StackName}BackendTG"
+      Port: !Ref BackendPort
+      HealthCheckEnabled: true
+      HealthCheckProtocol: !Ref BackendHealthCheckProtocol
+      HealthCheckIntervalSeconds: !Ref BackendHealthCheckIntervalSeconds
+      HealthCheckPath: !Ref BackendHealthCheckPath
+      HealthCheckPort: !Ref BackendHealthCheckPort
+      HealthCheckTimeoutSeconds: !Ref BackendHealthCheckTimeoutSeconds
+      HealthyThresholdCount: !Ref BackendHealthyThresholdCount
+      UnhealthyThresholdCount: !Ref BackendUnhealthyThresholdCount
+      IpAddressType: ipv4
+      Matcher: 
+        HttpCode: 200
+      Protocol: HTTP
+      ProtocolVersion: HTTP2
+      TargetGroupAttributes: 
+        - Key: deregistration_delay.timeout_seconds
+          Value: 10 # AB set it to 0
+      VpcId: 
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+
+  FrontendTG:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:      
+      Name: !Sub "${AWS::StackName}FrontendTG"
+      Port: !Ref FrontendPort
+      HealthCheckEnabled: true
+      HealthCheckProtocol: !Ref FrontendHealthCheckProtocol
+      HealthCheckIntervalSeconds: !Ref FrontendHealthCheckIntervalSeconds
+      HealthCheckPath: !Ref FrontendHealthCheckPath
+      HealthCheckPort: !Ref FrontendHealthCheckPort
+      HealthCheckTimeoutSeconds: !Ref FrontendHealthCheckTimeoutSeconds
+      HealthyThresholdCount: !Ref FrontendHealthyThresholdCount
+      UnhealthyThresholdCount: !Ref FrontendUnhealthyThresholdCount
+      IpAddressType: ipv4
+      Matcher: 
+        HttpCode: 200
+      Protocol: HTTP
+      ProtocolVersion: HTTP2
+      TargetGroupAttributes: 
+        - Key: deregistration_delay.timeout_seconds
+          Value: 10 # AB set it to 0
+      VpcId: 
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
 
 
 # Outputs:
