@@ -106,7 +106,6 @@ Resources:
           - ","
           - Fn::ImportValue:
               !Sub: "${NetworkingStack}SubnetIds"
-
       LoadBalancerAttributes:
       # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes.html
         - Key: routing.http2.enabled
