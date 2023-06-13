@@ -6,6 +6,7 @@ Description: |
   - Application Load Balancer (ALB)
     - ipv4 only
     - internet facing
+    - certicate attached from ACM (Amazon Certification Manager)
   - ALB Security Group
   - HTTPS Listener
     - send naked domain to frontend Target Group
@@ -91,7 +92,7 @@ Resources:
       ServiceConnectDefaults:
         Namespace: cruddur
 
-  LoadBalancer:
+  ALB:
   # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -100,12 +101,12 @@ Resources:
       IpAddressType: ipv4
       Scheme: internet-facing
       SecurityGroups:
-        - !Ref ALBSG
+        - !GetAtt ALBSG.GroupId
       Subnets:
         Fn::Split:
           - ","
           - Fn::ImportValue:
-              !Sub: "${NetworkingStack}SubnetIds"
+              !Sub "${NetworkingStack}PublicSubnetIds"
       LoadBalancerAttributes:
       # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-loadbalancer-loadbalancerattributes.html
         - Key: routing.http2.enabled
@@ -138,7 +139,7 @@ Resources:
       DefaultActions:
         - Type: forward
           TargetGroupArn: !Ref FrontendTG
-      LoadBalancerArn: !Ref LoadBalancer
+      LoadBalancerArn: !Ref ALB
 
   HTTPListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -154,7 +155,7 @@ Resources:
             Path: "/#{path}"
             Query: "#{query}"
             StatusCode: "HTTP_301"
-      LoadBalancerArn: !Ref LoadBalancer
+      LoadBalancerArn: !Ref ALB
 
   ApiALBListenerRule:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
