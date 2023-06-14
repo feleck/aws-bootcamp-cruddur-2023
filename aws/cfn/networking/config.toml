@@ -1,4 +1,4 @@
 [deploy]
-bucket = 'cfn-artifacts-awsbootcamp.online'
+bucket = 'cfn-artifacts.awsbootcamp.online'
 region = 'eu-west-1'
 stack_name = 'CrdNet'
