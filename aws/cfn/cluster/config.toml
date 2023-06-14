@@ -1,8 +1,8 @@
 [deploy]
-bucket = 'cfn-artifacts-awsbootcamp.online'
+bucket = 'cfn-artifacts.awsbootcamp.online'
 region = 'eu-west-1'
 stack_name = 'CrdCluster'
 
 [parameters]
-CertificateArn = 'arn:aws:acm:eu-west-1:........'
+CertificateArn = 'arn:aws:acm:eu-west-1:444282218245:certificate/bd55e2ce-a885-4f92-a4cd-2f22e8885f53'
 NetworkingStack = 'CrdNet'

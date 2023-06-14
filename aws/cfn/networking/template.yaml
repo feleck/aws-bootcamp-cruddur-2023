@@ -200,7 +200,7 @@ Outputs:
         - !Ref SubnetPub2
         - !Ref SubnetPub3
     Export:
-      Name: !Sub "${AWS::StackName}PubliccSubnetIds"
+      Name: !Sub "${AWS::StackName}PublicSubnetIds"
   PrivateSubnetIds:
     Value: !Join
       - ","

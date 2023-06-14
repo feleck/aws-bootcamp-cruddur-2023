@@ -10,21 +10,17 @@ CFN_PATH="$PROJECT_PATH/aws/cfn/"
 TEMPLATE_PATH="$CFN_PATH/networking/template.yaml"
 CONFIG_PATH="$CFN_PATH/networking/config.toml"
 
-echo $CFN_PATH
-echo $TEMPLATE_PATH
-echo $CONFIG_PATH
-
 cfn-lint "$CFN_PATH/template.yaml"
 
 BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
 REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
 STACK_NAME=$(cfn-toml key deploy.stack_name -t $CONFIG_PATH)
 
-# aws cloudformation deploy \
-#     --stack-name $STACK_NAME \
-#     --s3-bucket $BUCKET \
-#     --region $REGION \
-#     --template-file  "$TEMPLATE_PATH" \
-#     --no-execute-changeset \
-#     --tags group=cruddur_networking \
-#     --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation deploy \
+    --stack-name $STACK_NAME \
+    --s3-bucket $BUCKET \
+    --region $REGION \
+    --template-file  "$TEMPLATE_PATH" \
+    --no-execute-changeset \
+    --tags group=cruddur_networking \
+    --capabilities CAPABILITY_NAMED_IAM
