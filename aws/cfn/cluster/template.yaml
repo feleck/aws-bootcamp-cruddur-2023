@@ -242,5 +242,8 @@ Resources:
         Fn::ImportValue:
           !Sub ${NetworkingStack}VpcId
 
-
-# Outputs:
+Outputs:
+  ALBSEcurityGroupId:
+    Value: !GetAtt ALBSG.GroupId
+    Export:
+      Name: !Sub "${AWS::StackName}ALBSEcurityGroupId"

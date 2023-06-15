@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: |
+  Task Definiton
+  Fargate Service
+  Execution Role
+  Task Role
+
+Parameters:
+  NetworkingStack:
+    Type: String
+    Description: Base layer of networking components eg. VPC, Subnets
+    Default: CrdNet
+  ClusterStack:
+    Type: String
+    Description: Cluster layer eg. ECS Cluster, ALB
+    Default: CrdCluster
+  ContainerPort:
+    Type: String
+    Default: 4567
+
+Resources:
+  ServiceSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Public Facing SG For out Fargate Service
+      GroupName: !Sub "${AWS::StackName}ServiceSG"
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId:
+            Fn::ImportValue:
+              !Sub ${ClusterStack}ALBSEcurityGroupId
+          CidrIp: 0.0.0.0/0
+          Description: ALB HTTP
+
+  FargateService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster:
+
+      DeploymentConfiguration:
+
+      DeploymentController:
+      DesiredCount:
+      EnableEcsManagedTags: true
+      EnableExecuteCommand: true
+      HealthCheckGracePeriodSeconds:
+      Launchtype: FARGATE
+      LoadBalancers:
+        - TargetGroupArn: 'arn:aws:elasticloadbalancing:eu-west-1:'
+          ContainerName: backend-flask
+          ContainerPort: !Ref ContainerPort
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !GetAtt ServiceSG.GroupId
+          Subnets:
+            Fn::Split:
+              - ","
+              - Fn::ImportValue:
+                  !Sub "${NetworkingStack}PublicSubnetIds"
+      PlatformVersion: LATEST
+      PropagateTags: SERVICE
+      ServiceConnectConfiguration:
+      ServiceName: backend-flask
+      ServiceRegistries:
+        - RegistryArn: !Sub aws:arn:servicediscovery:${AWS::REGION}:${AWS::AccountId}:service/srv-cruddur-backend-flask
+          Port: 4567
+          ContainerName: backend-flask
+          ContainerPort: !Ref ContainerPort
+      TaskDefinition: backend-flask
+
+  TaskDefiniton:
+  ExecutionRole:
+  TaskRole:
+
+https://youtu.be/yj8QK8YULCQ?list=PLBfufR7vyJJ7k25byhRXJldB5AiwgNnWv&t=1579
