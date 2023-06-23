@@ -29,25 +29,24 @@ Parameters:
   DeletionProtection:
     Type: String
     AllowedValues:
-      - 'true'
-      - 'false'
-    Default: 'true'
+      - true
+      - false
+    Default: true
   EngineVersion:
     Type: String
     Default: '15.2'
   MasterUsername:
     Type: String
-
   MasterUserPassword:
     Type: String
     NoEcho: true
-    # Default: 
+
 Resources:
   RDSPostrgresSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Public Facing SG For out RDS Instance
-      GroupName: !Sub "${AWS::StackName}RDSPostgresSG"
+      GroupDescription: Public Facing SG For our RDS Instance
+      GroupName: !Sub "${AWS::StackName}RDSSG"
       VpcId:
         Fn::ImportValue:
           !Sub ${NetworkingStack}VpcId

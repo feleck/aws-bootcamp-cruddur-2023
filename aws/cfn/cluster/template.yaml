@@ -194,7 +194,7 @@ Resources:
   ServiceSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Security for Fargate Services for Cruddur
+      GroupDescription: SecurityGroup for Fargate Services for Cruddur
       GroupName: !Sub "${AWS::StackName}ServSG"
       VpcId:
         Fn::ImportValue:
