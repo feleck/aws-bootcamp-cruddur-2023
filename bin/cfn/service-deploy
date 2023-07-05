@@ -24,6 +24,6 @@ aws cloudformation deploy \
     --region $REGION \
     --template-file  "$TEMPLATE_PATH" \
     --no-execute-changeset \
-    --tags group=cruddur_backend-flask \
+    --tags group=cruddur-backend-flask \
     --capabilities CAPABILITY_NAMED_IAM
     #--parameter-overrides $PARAMETERS \

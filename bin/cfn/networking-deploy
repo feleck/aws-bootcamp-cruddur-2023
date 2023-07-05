@@ -23,5 +23,5 @@ aws cloudformation deploy \
     --region $REGION \
     --template-file  "$TEMPLATE_PATH" \
     --no-execute-changeset \
-    --tags group=cruddur_networking \
+    --tags group=cruddur-networking \
     --capabilities CAPABILITY_NAMED_IAM
