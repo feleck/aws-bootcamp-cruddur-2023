@@ -63,7 +63,7 @@ Resources:
     Properties:
       # Architectures: 
       #   - arm64
-      CodeUri: "/aws/lambda/cruddur-messaging-stream"
+      CodeUri: .
       # InlineCode: ???
       PackageType: Zip
       Handler: lambda_handler
@@ -103,23 +103,23 @@ Resources:
               Service: 'lambda.amazonaws.com'
             Action: 'sts:AssumeRole'
       Policies: 
-        - PolicyName: 'LambdaExecutionPolicy'
+        - PolicyName: "LambdaExecutionPolicy"
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: "2012-10-17"
             Statement:
-              - Effect: 'Allow'
-                Action: 'logs:CreateLogGroup'
+              - Effect: "Allow"
+                Action: "logs:CreateLogGroup"
                 Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
-              - Effect: 'Allow'
+              - Effect: "Allow"
                 Action: 
-                  - 'logs:CreateLogStream'
-                  - 'logs:PutLogEvents'
-                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:$(LambdaGroup):*"
-              - Effect: 'Allow'
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LambdaLogGroup}:*"
+              - Effect: "Allow"
                 Action: 
                   - 'ec2:CreateNetworkInterface'
-                  - 'ec2.DeleteNetworkInterface'
-                  - 'ec2.DescribeNetworkInterfaces'
+                  - 'ec2:DeleteNetworkInterface'
+                  - 'ec2:DescribeNetworkInterfaces'
                 Resource: "*"
               - Effect: 'Allow'
                 Action: 
@@ -129,7 +129,7 @@ Resources:
                 Action: 
                   - 'dynamodb:DescribeStream'
                   - 'dynamodb:GetRecords'
-                  - 'dynamodb:GetSharedIterator'
+                  - 'dynamodb:GetShardIterator'
                   - 'dynamodb:ListSteams'
                 Resource: "*"
 

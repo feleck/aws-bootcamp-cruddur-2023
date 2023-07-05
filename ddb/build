@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
-
 set -e
 
 ABS_PATH=$(readlink -f "$0")
-BACKEND_PATH=$(dirname $ABS_PATH)
-SAM_PATH=$(dirname $BACKEND_PATH)
-BIN_PATH=$(dirname $SAM_PATH)
-PROJECT_PATH=$(dirname $BIN_PATH)
+DDB_PATH=$(dirname $ABS_PATH)
+PROJECT_PATH=$(dirname $DDB_PATH)
+# echo $PROJECT_PATH
 
-FUNC_DIR="$PROJECT_PATH/aws/lambdas/cruddur-messaging-stream/"
-CFN_PATH="$PROJECT_PATH/aws/cfn"
-CONFIG_PATH="$CFN_PATH/ddb/config.toml"
+# FUNC_DIR="$PROJECT_PATH/aws/lambdas/cruddur-messaging-stream/"
+# CFN_PATH="$PROJECT_PATH/aws/cfn"
 
-TEMPLATE_PATH="$PROJECT_PATH/.aws-sam/build/template.yaml"
-TEMPLATE_PATH="$PROJECT_PATH/aws/cfn/ddb/template.yaml"
+FUNC_DIR="$PROJECT_PATH/ddb/function"
+# TEMPLATE_PATH="$PROJECT_PATH/.aws-sam/build/template.yaml"
+TEMPLATE_PATH="$PROJECT_PATH/ddb/template.yaml"
+CONFIG_PATH="$PROJECT_PATH/ddb/config.toml"
 
 sam validate -t $TEMPLATE_PATH
 
