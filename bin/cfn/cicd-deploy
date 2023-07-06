@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -e # stop the execution if it fails
+
+ABS_PATH=$(readlink -f "$0")
+BACKEND_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $BACKEND_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+CFN_PATH="$PROJECT_PATH/aws/cfn/"
+
+TEMPLATE_PATH="$CFN_PATH/cicd/template.yaml"
+CONFIG_PATH="$CFN_PATH/cicd/config.toml"
+
+cfn-lint "$CFN_PATH/template.yaml"
+
+BUCKET=$(cfn-toml key deploy.bucket -t $CONFIG_PATH)
+REGION=$(cfn-toml key deploy.region -t $CONFIG_PATH)
+STACK_NAME=$(cfn-toml key deploy.stack_name -t $CONFIG_PATH)
+
+aws cloudformation deploy \
+    --stack-name $STACK_NAME \
+    --s3-bucket $BUCKET \
+    --s3-prefix cicd \
+    --region $REGION \
+    --template-file  "$TEMPLATE_PATH" \
+    --no-execute-changeset \
+    --tags group=cruddur-cicd \
+    --capabilities CAPABILITY_NAMED_IAM
