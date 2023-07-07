@@ -12,12 +12,12 @@ Parameters:
     Type: String
     Description: "The log group path for CodeBuild backend"
     Default: "backend-flask"
-  CodeBuildBakeImage:
+  CodeBuildImage:
     Type: String
     Default: aws/codebuild/amazonlinux2-x86_64-standard:4.0
   CodeBuildComputeType:
     Type: String
-    Default: BUILD_GENAREL1_SMALL
+    Default: BUILD_GENERAL1_SMALL
   CodeBuildTimeoutMins:
     Type: Number
     Default: 5
@@ -51,17 +51,17 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: 2012-10-17
+        Version: '2012-10-17'
         Statement:
-        - Action: sts.AssumeRole
+        - Action: 'sts.AssumeRole'
           Effect: Allow
           Principal:
-            Service: codebuild.amazonaws.com
+            Service: 'codebuild.amazonaws.com'
       Path: /
       Policies:
         - PolicyName: !Sub ${AWS::StackName}ECRPolicy
           PolicyDocument:
-            Version: 2012-10-17
+            Version: '2012-10-17'
             Statement:
               - Action:
                 - ecr:BatchCheckLayerAvailability
@@ -76,7 +76,7 @@ Resources:
                 Resource: "*"
         - PolicyName: !Sub ${AWS::StackName}VPCPolicy
           PolicyDocument:
-            Version: 2012-10-17
+            Version: '2012-10-17'
             Statement:
               - Action:
                 - ec2:CreateNetworkInterface
@@ -94,7 +94,7 @@ Resources:
                 Resource: "*"
         - PolicyName: !Sub ${AWS::StackName}Logs
           PolicyDocument:
-            Version: 2012-10-17
+            Version: '2012-10-17'
             Statement:
               - Action:
                 - logs:CreateLogGroup
