@@ -186,7 +186,7 @@ Resources:
       RouteTableId: !Ref RouteTable
       SubnetId: !Ref SubnetPriv2
   
-    SubnetPriv3RTAssociation:
+  SubnetPriv3RTAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref RouteTable
