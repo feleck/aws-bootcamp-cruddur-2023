@@ -180,6 +180,18 @@ Resources:
       RouteTableId: !Ref RouteTable
       SubnetId: !Ref SubnetPriv1
 
+  SubnetPriv2RTAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetPriv2
+  
+    SubnetPriv3RTAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetPriv3
+
 Outputs:
   VpcId:
     Value: !Ref VPC
