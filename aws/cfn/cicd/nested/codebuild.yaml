@@ -53,10 +53,10 @@ Resources:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-        - Action: 'sts.AssumeRole'
+        - Action: ['sts:AssumeRole']
           Effect: Allow
           Principal:
-            Service: 'codebuild.amazonaws.com'
+            Service: [codebuild.amazonaws.com]
       Path: /
       Policies:
         - PolicyName: !Sub ${AWS::StackName}ECRPolicy
@@ -85,7 +85,7 @@ Resources:
                 - ec2:DeleteNetworkInterface
                 - ec2:DescribeSubnets
                 - ec2:DescribeSecurityGroups
-                - ec2:DescribeVPC
+                - ec2:DescribeVPCs
                 Effect: Allow
                 Resource: "*"
               - Action:
@@ -103,10 +103,10 @@ Resources:
                 Effect: Allow
                 Resource:
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LogGroupPath}*
-                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LogStreamName}*
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:${LogGroupPath}:*
                   # check if above is correct
 
 Outputs:
   CodeBuildProjectName:
     Description: "CodeBuildProjectName"
-    Value: !Sub ${AWS::StackName}Project
+    Value: !Ref CodeBuild
