@@ -1,7 +1,6 @@
 import './ReplyForm.css';
 import React from "react";
 import process from 'process';
-import {ReactComponent as BombIcon} from './svg/bomb.svg';
 
 import ActivityContent  from '../components/ActivityContent';
 
@@ -61,7 +60,6 @@ export default function ReplyForm(props) {
   if (props.activity){
     content = <ActivityContent activity={props.activity} />;
   }
-
 
   if (props.popped === true) {
     return (
