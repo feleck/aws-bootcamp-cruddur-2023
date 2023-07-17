@@ -7,3 +7,7 @@ stack_name = 'CrdDb'
 NetworkingStack = 'CrdNet'
 ClusterStack = 'CrdCluster'
 MasterUsername = 'cruddurroot'
+8YG6x#c&6*yxEMCTy3c
+k^A8w2T9Sn5ShzH
+gp env PROD_CONNECTION_URL="postgresql://cruddurroot:k^A8w2T9Sn5ShzH@cruddur-instance.cqch2tuaw2nz.eu-west-1.rds.amazonaws.com:5432/cruddur"
+export PROD_CONNECTION_URL="postgresql://cruddurroot:k^A8w2T9Sn5ShzH@cruddur-instance.cqch2tuaw2nz.eu-west-1.rds.amazonaws.com:5432/cruddur"
