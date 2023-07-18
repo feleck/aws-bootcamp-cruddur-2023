@@ -4,7 +4,10 @@ import os
 import sys
 import psycopg
 
-connection_url = os.getenv("CONNECTION_URL")
+if len(sys.argv)>1 and sys.argv[1] == "prod":
+  connection_url = os.getenv("PROD_CONNECTION_URL")
+else:
+  connection_url = os.getenv("CONNECTION_URL")
 
 conn = None
 try:
