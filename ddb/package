@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+ABS_PATH=$(readlink -f "$0")
+DDB_PATH=$(dirname $ABS_PATH)
+PROJECT_PATH=$(dirname $DDB_PATH)
+
+# FUNC_DIR="$PROJECT_PATH/aws/lambdas/cruddur-messaging-stream/"
+
+CONFIG_PATH="$PROJECT_PATH/ddb/config.toml"
+
+ARTIFACT_BUCKET="cfn-artifacts.awsbootcamp.online"
+TEMPLATE_PATH="$PROJECT_PATH/.aws-sam/build/template.yaml"
+OUTPUT_TEMPLATE_PATH="$PROJECT_PATH/.aws-sam/build/packaged.yaml"
+
+sam package \
+    --s3-bucket $ARTIFACT_BUCKET \
+    --config-file $CONFIG_PATH \
+    --output-template-file $OUTPUT_TEMPLATE_PATH \
+    --template-file $TEMPLATE_PATH \
+    --s3-prefix "ddb"

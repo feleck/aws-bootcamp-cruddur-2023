@@ -1,0 +1,11 @@
+[deploy]
+bucket = 'cfn-artifacts.awsbootcamp.online'
+region = 'eu-west-1'
+stack_name = 'CrdCicd'
+
+[parameters]
+ServiceStack = 'CrdSrvBackendFlask'
+ClusterStack = 'CrdCluster'
+GitHubBranch = 'prod'
+GitHubRepo = 'feleck/aws-bootcamp-cruddur-2023'
+ArtifactBucketName = 'codepipeline-artifacts.awsbootcamp.online'

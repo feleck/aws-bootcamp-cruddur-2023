@@ -1,0 +1,8 @@
+[deploy]
+bucket = 'cfn-artifacts.awsbootcamp.online'
+region = 'eu-west-1'
+stack_name = 'CrdSrvBackendFlask'
+
+[parameters]
+EnvFrontendUrl = 'https://awsbootcamp.online'
+EnvBackendUrl = 'https://api.awsbootcamp.online'

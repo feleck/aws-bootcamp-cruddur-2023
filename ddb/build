@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+ABS_PATH=$(readlink -f "$0")
+DDB_PATH=$(dirname $ABS_PATH)
+PROJECT_PATH=$(dirname $DDB_PATH)
+# echo $PROJECT_PATH
+
+# FUNC_DIR="$PROJECT_PATH/aws/lambdas/cruddur-messaging-stream/"
+# CFN_PATH="$PROJECT_PATH/aws/cfn"
+
+FUNC_DIR="$PROJECT_PATH/ddb/function"
+# TEMPLATE_PATH="$PROJECT_PATH/.aws-sam/build/template.yaml"
+TEMPLATE_PATH="$PROJECT_PATH/ddb/template.yaml"
+CONFIG_PATH="$PROJECT_PATH/ddb/config.toml"
+
+sam validate -t $TEMPLATE_PATH
+
+sam build \
+    --config-file $CONFIG_PATH \
+    --template $TEMPLATE_PATH \
+    --use-container \
+    --base-dir $FUNC_DIR
+    # --build-dir $FUNC_DIR \
+    # --parameter-overrides \
+
+    # use-container is for building the lambda in a container not that we are using a custom - uses runtime

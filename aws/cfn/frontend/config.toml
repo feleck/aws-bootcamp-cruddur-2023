@@ -1,0 +1,9 @@
+[deploy]
+bucket = 'cfn-artifacts.awsbootcamp.online'
+region = 'eu-west-1'
+stack_name = 'CrdFrontend'
+
+[parameters]
+CertificateArn = 'arn:aws:acm:us-east-1:444282218245:certificate/78f0f799-0014-4abf-a85f-00158d3c3600'
+WwwBucketName = 'www.awsbootcamp.online'
+RootBucketName = 'awsbootcamp.online'

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+ABS_PATH=$(readlink -f "$0")
+DDB_PATH=$(dirname $ABS_PATH)
+PROJECT_PATH=$(dirname $DDB_PATH)
+# FUNC_DIR="$PROJECT_PATH/aws/lambdas/cruddur-messaging-stream"
+
+CONFIG_PATH="$PROJECT_PATH/ddb/config.toml"
+PACKAGED_TEMPLATE_PATH="$PROJECT_PATH/.aws-sam/build/packaged.yaml"
+
+sam deploy \
+    --template-file $PACKAGED_TEMPLATE_PATH \
+    --config-file $CONFIG_PATH \
+    --stack-name "CrdDdb" \
+    --no-execute-changeset \
+    --tags group=cruddur-ddb \
+    --capabilities "CAPABILITY_NAMED_IAM"

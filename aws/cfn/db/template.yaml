@@ -1,0 +1,104 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  Setup Primary DB for the application RDS-Postgres
+    - RDS Instance
+    - DB Security Group
+    - DB Subnet Group
+  
+Parameters:
+  NetworkingStack:
+    Type: String
+    Description: Base layer of networking components eg. VPC, Subnets
+    Default: CrdNet
+  ClusterStack:
+    Type: String
+    Description: Fargate Cluster
+    Default: CrdCluster
+  BackupRetentionPeriod:
+    Type: Number
+    Default: 0
+  DBInstanceClass:
+    Type: String
+    Default: 'db.t4g.micro'
+  DBInstanceIdentifier:
+    Type: String
+    Default: cruddur-instance
+  DBName:
+    Type: String
+    Default: cruddur
+  DeletionProtection:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+    Default: true
+  EngineVersion:
+    Type: String
+    Default: '15.2'
+  MasterUsername:
+    Type: String
+  MasterUserPassword:
+    Type: String
+    NoEcho: true
+
+Resources:
+  RDSPostrgresSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Public Facing SG For our RDS Instance
+      GroupName: !Sub "${AWS::StackName}RDSSG"
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          SourceSecurityGroupId: 
+            Fn::ImportValue:
+              !Sub ${ClusterStack}ServiceSecurityGroupId
+          FromPort: 5432
+          ToPort: 5432          
+          Description: Postgres access
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub "${AWS::StackName}DBSubnetGroup"
+      DBSubnetGroupDescription: !Sub "${AWS::StackName}DBSubnetGroup"
+      SubnetIds:
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              !Sub "${NetworkingStack}PublicSubnetIds"
+
+                  
+  Database: # LogicalName
+    Type: 'AWS::RDS::DBInstance'
+    DeletionPolicy: 'Snapshot'
+    UpdateReplacePolicy: 'Snapshot'
+    Properties:
+      AllocatedStorage: '20'
+      AllowMajorVersionUpgrade: true
+      AutoMinorVersionUpgrade: true
+      BackupRetentionPeriod: !Ref BackupRetentionPeriod
+      DBInstanceClass: !Ref DBInstanceClass
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      DBName: !Ref DBName
+
+      DBSubnetGroupName: !Ref DBSubnetGroup
+
+      DeletionProtection: !Ref DeletionProtection
+      EnablePerformanceInsights: true
+      Engine: postgres
+      EngineVersion: !Ref EngineVersion
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      PubliclyAccessible: true
+      VPCSecurityGroups:
+        - !GetAtt RDSPostrgresSG.GroupId
+
+
+# Outputs:
+#   DBSecurityGroupId:
+#     Value: !GettAtt Database.GroupId
+#     Export:
+#       Name: !Sub "${AWS::StackName}Database"
