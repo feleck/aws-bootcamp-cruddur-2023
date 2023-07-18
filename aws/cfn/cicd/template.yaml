@@ -18,6 +18,8 @@ Parameters:
     Type: String
   ArtifactBucketName:
     Type: String
+  BuildSpec:
+    Type: String
 
 Resources:
   Codebuild:
@@ -25,7 +27,8 @@ Resources:
     Properties:
       TemplateURL: nested/codebuild.yaml
       Parameters:
-        BootstrapStack: !Ref ArtifactBucketName
+        ArtifactBucketName: !Ref ArtifactBucketName
+        BuildSpec: !Ref BuildSpec
   CodeStarConnection:
     Type: AWS::CodeStarConnections::Connection
     Properties:

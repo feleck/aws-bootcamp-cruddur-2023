@@ -6,11 +6,11 @@ Description: >-
 Parameters:
   LogGroupPath:
     Type: String
-    Description: "The log group path for CodeBuild service"
+    Description: "The log group path for CodeBuild"
     Default: "/cruddur/codebuild/bake-service"
   LogStreamName:
     Type: String
-    Description: "The log group path for CodeBuild backend"
+    Description: "The log group path for CodeBuild"
     Default: "backend-flask"
   CodeBuildImage:
     Type: String
