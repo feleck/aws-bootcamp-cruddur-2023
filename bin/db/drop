@@ -8,11 +8,11 @@ printf "${CYAN}== ${LABEL} ==${NO_COLOR}\n"
 if [ "$1" = "prod" ]; then
     echo "using production"
     CON_URL=$PROD_CONNECTION_URL
+    NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//2g' <<< $CON_URL)
 else
     echo "local"
     CON_URL=$CONNECTION_URL
+    NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//g' <<< $CON_URL)
 fi
 
-NO_DB_CONNECTION_URL=$(sed 's/\/cruddur//2g' <<< $CON_URL)
-echo $NO_DB_CONNECTION_URL
 psql $NO_DB_CONNECTION_URL/postgres -c "DROP DATABASE IF EXISTS cruddur;"
