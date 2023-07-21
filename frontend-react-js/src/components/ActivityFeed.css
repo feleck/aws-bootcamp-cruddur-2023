@@ -5,6 +5,13 @@
   flex-shrink: 0;
 }
 
+.activity_feed_primer {
+  font-size: 20px;
+  text-align: center;
+  padding: 24px;
+  color: rgba(250,250,250,0.35);
+}
+
 .activity_feed_collection {
   display: flex;
   flex-direction: column;
