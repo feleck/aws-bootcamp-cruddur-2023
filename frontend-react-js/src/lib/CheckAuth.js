@@ -10,7 +10,7 @@ export async function getAccessToken() {
   .catch((err) => console.log(err));
 }
 
-export async function CheckAuth(setUser) {
+export async function checkAuth(setUser) {
     Auth.currentAuthenticatedUser({
       // Optional, By default is false. 
       // If set to true, this call will send a 

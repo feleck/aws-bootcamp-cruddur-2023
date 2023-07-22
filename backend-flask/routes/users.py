@@ -1,20 +1,32 @@
-## Flask
-from flask import request,g
+## flask
+from flask import request, g
 
-## Decorators
+## decorators
 from aws_xray_sdk.core import xray_recorder
 from lib.cognito_jwt_token import jwt_required
 from flask_cors import cross_origin
 
-## Services
+## services
 from services.users_short import UsersShort
 from services.update_profile import UpdateProfile
 from services.user_activities import UserActivities
+from services.show_activity import ShowActivity
 
-## Helpers
+## helpers
 from lib.helpers import model_json
 
 def load(app):
+  @app.route("/api/activities/@<string:handle>", methods=['GET'])
+  #@xray_recorder.capture('activities_users')
+  def data_users_activities(handle):
+    model = UserActivities.run(handle)
+    return model_json(model)
+
+  @app.route("/api/activities/@<string:handle>/status/<string:activity_uuid>", methods=['GET'])
+  def data_show_activity(handle,activity_uuid):
+    data = ShowActivity.run(activity_uuid)
+    return data, 200
+
   @app.route("/api/users/@<string:handle>/short", methods=['GET'])
   def data_users_short(handle):
     data = UsersShort.run(handle)
@@ -32,8 +44,3 @@ def load(app):
       display_name=display_name
     )
     return model_json(model)
-
-  @app.route("/api/activities/@<string:handle>", methods=['GET'])
-  @xray_recorder.capture('activities-users')
-  def data_handle(handle):
-    return return_model(UserActivities.run(handle))

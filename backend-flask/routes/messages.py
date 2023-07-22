@@ -18,7 +18,8 @@ def load(app):
   @app.route("/api/message_groups", methods=['GET'])
   @jwt_required()
   def data_message_groups():
-    return model_json(MessageGroups.run(cognito_user_id=g.cognito_user_id))
+    model = MessageGroups.run(cognito_user_id=g.cognito_user_id)
+    return model_json(model)
 
   @app.route("/api/messages/<string:message_group_uuid>", methods=['GET'])
   @jwt_required()
@@ -33,9 +34,9 @@ def load(app):
   @cross_origin()
   @jwt_required()
   def data_create_message():
-    message = request.json['message']
     message_group_uuid = request.json.get('message_group_uuid', None)
     user_receiver_handle = request.json.get('handle', None)
+    message = request.json['message']
     if message_group_uuid == None:
       # Create for the first time
       model = CreateMessage.run(
