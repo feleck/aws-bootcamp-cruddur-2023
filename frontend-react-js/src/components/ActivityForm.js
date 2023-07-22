@@ -16,10 +16,10 @@ export default function ActivityForm(props) {
   if (240-count < 0){
     classes.push('err')
   }
-
+  
   const onsubmit = async (event) => {
     event.preventDefault();
-    const backend_url = `${process.env.REACT_APP_BACKEND_URL}/api/activities`
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities`
     const payload_data = {
       message: message,
       ttl: ttl
