@@ -5,11 +5,8 @@
   overflow: hidden;
 }
 
-a.activity_item {
-  text-decoration: none;
-}
-
-a.activity_item:hover {
+.activity_item:hover {
+  cursor: pointer;
   background: rgba(255, 255, 255, 0.15);
 }
 

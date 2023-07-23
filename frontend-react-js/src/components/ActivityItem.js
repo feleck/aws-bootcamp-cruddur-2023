@@ -1,5 +1,5 @@
 import './ActivityItem.css';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ActivityContent  from 'components/ActivityContent';
 import ActivityActionReply  from 'components/ActivityActionReply';
 import ActivityActionRepost  from 'components/ActivityActionRepost';
@@ -7,8 +7,15 @@ import ActivityActionLike  from 'components/ActivityActionLike';
 import ActivityActionShare  from 'components/ActivityActionShare';
 
 export default function ActivityItem(props) {
+  const navigate = useNavigate();
+  const click = (event) => {
+    event.preventDefault()
+    const url = `/@${props.activity.handle}/status/${props.activity.uuid}`
+    navigate(url)
+    return false
+  }
   return (
-    <Link className='activity_item' to={`/@${props.activity.handle}/status/${props.activity.uuid}`} >
+    <div className='activity_item' onClick={click} >
       <div className='activity_main'>
         <ActivityContent activity={props.activity} />
         <div className="activity_actions">
@@ -18,6 +25,6 @@ export default function ActivityItem(props) {
           <ActivityActionShare activity_uuid={props.activity.uuid} />
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

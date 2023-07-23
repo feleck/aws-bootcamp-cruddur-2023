@@ -68,7 +68,7 @@ export default function ActivityShow() {
         />
         <div className='activitiy_feed'>
           <div className='activity_feed_heading'>
-            <div className='title'>Home</div>
+            <div className='title'>Crud</div>
           </div>
           {el_activity}
           <Replies
