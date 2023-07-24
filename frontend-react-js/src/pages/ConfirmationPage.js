@@ -1,7 +1,7 @@
 import './ConfirmationPage.css';
 import React from "react";
 import { useParams } from 'react-router-dom';
-import {ReactComponent as Logo} from '../components/svg/logo.svg';
+import {ReactComponent as Logo} from 'components/svg/logo.svg';
 
 // [TODO] Authenication
 import { Auth } from 'aws-amplify';
