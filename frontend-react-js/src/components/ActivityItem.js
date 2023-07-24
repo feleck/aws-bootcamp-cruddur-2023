@@ -6,7 +6,6 @@ import ActivityActionReply  from 'components/ActivityActionReply';
 import ActivityActionRepost  from 'components/ActivityActionRepost';
 import ActivityActionLike  from 'components/ActivityActionLike';
 import ActivityActionShare  from 'components/ActivityActionShare';
-import { format_datetime } from 'lib/DateTimeFormats';
 
 export default function ActivityItem(props) {
   const navigate = useNavigate();
@@ -16,6 +15,8 @@ export default function ActivityItem(props) {
     navigate(url)
     return false
   }
+
+  const attrs = {}
   attrs.className = 'activity_item clickable'
   attrs.onClick = click
   

@@ -6,3 +6,4 @@ stack_name = 'CrdSrvBackendFlask'
 [parameters]
 EnvFrontendUrl = 'https://awsbootcamp.online'
 EnvBackendUrl = 'https://api.awsbootcamp.online'
+DDBMessageTable = 'CrdDdb-DynamoDBTable-1OISG6TCEOGI9'

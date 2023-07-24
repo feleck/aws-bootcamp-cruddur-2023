@@ -49,7 +49,6 @@ export default function ProfileForm(props) {
     console.log('event',event)
     const file = event.target.files[0]
     const filename = file.name
-    const size = file.size
     const type = file.type
     // const preview_image_url = URL.createObjectURL(file)
     // console.log(filename,size,type)

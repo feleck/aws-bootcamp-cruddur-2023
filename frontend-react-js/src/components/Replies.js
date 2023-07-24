@@ -15,7 +15,7 @@ export default function Replies(props) {
         setReplyActivity={props.setReplyActivity}
         setPopped={props.setPopped}
         key={activity.uuid}
-        activity={reply} />
+        activity={activity} />
       })}
     </div>
   }
