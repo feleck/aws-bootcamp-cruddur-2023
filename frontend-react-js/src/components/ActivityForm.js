@@ -3,7 +3,7 @@ import React from "react";
 import process from 'process';
 import {ReactComponent as BombIcon} from './svg/bomb.svg';
 import {post} from 'lib/Requests';
-import FormErrors from './FormErrors';
+import FormErrors from 'complonents/FormErrors';
 
 export default function ActivityForm(props) {
   const [count, setCount] = React.useState(0);
@@ -29,7 +29,7 @@ export default function ActivityForm(props) {
       setErrors: setErrors,
       success: function(data){
         // add activity to the feed
-        props.setActivities(current => [data, ...current]);
+        props.setActivities(current => [data,...current]);
         //reset and close the form
         setCount(0)
         setMessage('')
