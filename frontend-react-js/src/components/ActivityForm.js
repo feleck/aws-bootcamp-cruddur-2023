@@ -3,7 +3,7 @@ import React from "react";
 import process from 'process';
 import {ReactComponent as BombIcon} from './svg/bomb.svg';
 import {post} from 'lib/Requests';
-import FormErrors from 'complonents/FormErrors';
+import FormErrors from 'components/FormErrors';
 
 export default function ActivityForm(props) {
   const [count, setCount] = React.useState(0);
