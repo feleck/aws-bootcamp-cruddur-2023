@@ -12,7 +12,7 @@ import ActivityShowItem from 'components/ActivityShowItem'
 import {get} from 'lib/Requests';
 import {checkAuth} from 'lib/CheckAuth';
 
-export default function ActivityShow() {
+export default function ActivityShowPage() {
   const [activity, setActivity] = React.useState(null);
   const [replies, setReplies] = React.useState([]);
   const [popped, setPopped] = React.useState(false);
@@ -27,7 +27,7 @@ export default function ActivityShow() {
     navigate(-1);
   }
   const loadData = async () => {
-    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/@{params.handle}/status/${params.activity_uuid}`
+    const url = `${process.env.REACT_APP_BACKEND_URL}/api/activities/@${params.handle}/status/${params.activity_uuid}`
     get(url, {
       auth: true,
       success: function(data) {
