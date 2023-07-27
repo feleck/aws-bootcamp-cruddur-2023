@@ -48,12 +48,13 @@ Parameters:
   EnvAWSCognitoUserPoolClientId:
     Type: String
     Default: 5rs1f4tdgmh2vou8usr42th53j
+  EnvFlaskEnv:
+    Type: String
+    Default: "production"  
   EnvFrontendUrl:
     Type: String
-    Default: "*"
   EnvBackendUrl:
     Type: String
-    Default: "*"
   SecretsAWSAccessKeyId:
     Type: String
     Default: 'arn:aws:ssm:eu-west-1:444282218245:parameter/cruddur/backend-flask/AWS_ACCESS_KEY_ID'
@@ -165,6 +166,8 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: !Ref ServiceName
           Environment:
+            - Name: FLASK_ENV
+              Value: !Ref EnvFlaskEnv
             - Name: 'DDB_MESSAGE_TABLE'
               Value: !Ref DDBMessageTable
             - Name: 'OTEL_SERVICE_NAME'
