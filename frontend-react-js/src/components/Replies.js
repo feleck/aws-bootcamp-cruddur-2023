@@ -9,7 +9,7 @@ export default function Replies(props) {
       <span>Nothing to see here yet</span>
     </div>
   } else {
-    content = <div className='replies_feed_collection'>
+    content = <div className='activities_feed_collection'>
       {props.replies.map(activity => {
       return  <ActivityItem 
         setReplyActivity={props.setReplyActivity}
