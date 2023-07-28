@@ -27,10 +27,10 @@ with app.app_context():
   g.rollbar = init_rollbar(app)
 
 ## Routes --------- ##
-routes.activities.load(app)
 routes.general.load(app)
-routes.messages.load(app)
+routes.activities.load(app)
 routes.users.load(app)
+routes.messages.load(app)
 
 if __name__ == "__main__":
   app.run(debug=True)
