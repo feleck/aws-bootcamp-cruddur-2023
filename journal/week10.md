@@ -81,7 +81,9 @@ DB Instance
     aws rds describe-db-engine-versions --default-only --engine postgres
 
 DB_PASSWORD: - don't forget to create ENV_VAR (local, gitpod etc.)
-8YG6x#c&6*yxEMCTy3c
+8YG6x#c&6*yxEMCTy3c (old)
+DB_PASSWORD env var
+
 
 Updated Systems Manager Parameters for new DB arn and password
 cruddur-instance
