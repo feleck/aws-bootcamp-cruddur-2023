@@ -323,3 +323,7 @@ added REACT_APP_API_GATEWAY_ENDPOINT_URL=https://ozj0z3xkpf.execute-api.eu-west-
 
 # Rollbar fix
 with FLASK_ENV
+
+https://app.diagrams.net/#G1owRqCZTUMwxMSn0DN3_cQ59r64Qy8iFA
+
+Diagram ready
